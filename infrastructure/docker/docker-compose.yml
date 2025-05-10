@@ -1,0 +1,170 @@
+version: '3.8'
+
+services:
+  # --- DATA INGESTION LAYER ---
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  data-generator:
+    build:
+      context: ../../backend/data_ingestion
+      dockerfile: Dockerfile
+    container_name: data-generator
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+  # --- DATA STORAGE LAYER ---
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: healthpulse
+      POSTGRES_PASSWORD: healthpulsepassword
+      POSTGRES_DB: healthpulse
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../../backend/data_storage/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  influxdb:
+    image: influxdb:2.6
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: healthpulse
+      DOCKER_INFLUXDB_INIT_PASSWORD: healthpulsepassword
+      DOCKER_INFLUXDB_INIT_ORG: healthpulse
+      DOCKER_INFLUXDB_INIT_BUCKET: patient_vitals
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: health-pulse-token
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+
+  # --- DATA PROCESSING LAYER ---
+  data-processing:      
+    build:
+      context: ../../backend/data_processing
+      dockerfile: Dockerfile
+    container_name: data-processing
+    depends_on:
+      - kafka
+      - postgres
+      - influxdb
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: healthpulse
+      POSTGRES_PASSWORD: healthpulsepassword
+      POSTGRES_DB: healthpulse
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: health-pulse-token
+      INFLUXDB_ORG: healthpulse
+      INFLUXDB_BUCKET: patient_vitals
+
+  # --- ML MODELS LAYER ---
+  ml-model-server:
+    build:
+      context: ../../ml_models/serving
+      dockerfile: Dockerfile
+    container_name: ml-model-server
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - influxdb
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: healthpulse
+      POSTGRES_PASSWORD: healthpulsepassword
+      POSTGRES_DB: healthpulse
+      MODEL_PATH: /app/models
+      LOG_LEVEL: INFO
+
+  # --- API GATEWAY ---
+  api-gateway:
+    build:
+      context: ../../backend/api_gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ml-model-server
+      - postgres
+    environment:
+      ML_MODEL_SERVER_URL: http://ml-model-server:8000
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: healthpulse
+      POSTGRES_PASSWORD: healthpulsepassword
+      POSTGRES_DB: healthpulse
+      JWT_SECRET: healthpulse-super-secret-key-change-in-production
+      CORS_ORIGINS: "http://localhost:3000"
+      LOG_LEVEL: INFO
+
+  # --- FRONTEND ---
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api-gateway
+
+  # --- MONITORING ---
+  prometheus:
+    image: prom/prometheus:v2.43.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../../infrastructure/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana:9.5.0
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: healthpulse
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ../../infrastructure/monitoring/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+
+volumes:
+  postgres_data:
+  influxdb_data:
+  prometheus_data:
+  grafana_data:
