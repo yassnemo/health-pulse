@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthpulse-backend
+  labels:
+    app: healthpulse
+    tier: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: healthpulse
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: healthpulse
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: ${REGISTRY_URL}/healthpulse-backend:${IMAGE_TAG}
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+          requests:
+            cpu: "200m"
+            memory: "512Mi"
+        readinessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: healthpulse-config
+              key: db_host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: healthpulse-config
+              key: db_port
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: healthpulse-config
+              key: db_name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: healthpulse-secrets
+              key: db_user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: healthpulse-secrets
+              key: db_password
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: healthpulse-secrets
+              key: jwt_secret
+        - name: NODE_ENV
+          value: "production"
+        - name: LOG_LEVEL
+          value: "info"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: healthpulse-backend
+  labels:
+    app: healthpulse
+    tier: backend
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: healthpulse
+    tier: backend
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: healthpulse-config
+data:
+  api_url: "https://healthpulse.example.com/api"
+  db_host: "postgres.database.svc.cluster.local"
+  db_port: "5432"
+  db_name: "healthpulse"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: healthpulse-secrets
+type: Opaque
+data:
+  db_user: "aGVhbHRocHVsc2U=" # healthpulse (base64 encoded)
+  db_password: "Y2hhbmdlbWU=" # changeme (base64 encoded)
+  jwt_secret: "c2VjcmV0X2tleV9mb3JfaGVhbHRocHVsc2UxMjM=" # secret_key_for_healthpulse123 (base64 encoded)
