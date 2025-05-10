@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build files
+dist/
+build/
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Cache
+.cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Coverage reports
+coverage/
+.coverage
+htmlcov/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Log files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database files
+*.sqlite3
+
+# ML model files
+*.pkl
+*.h5
+*.bin
+*.onnx
+
+# OS generated files
+.DS_Store
+Thumbs.db
