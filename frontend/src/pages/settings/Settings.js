@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Button, FormInput, FormSelect, Alert, Spinner } from '../components/ui/UIComponents';
-import { useAuth } from '../context/AuthContext';
+import { Card, Button, FormInput, FormSelect, Alert, Spinner } from '../../components/ui/UIComponents';
+import { useAuth } from '../../context/AuthContext';
 
 const Settings = () => {
   const { currentUser } = useAuth();

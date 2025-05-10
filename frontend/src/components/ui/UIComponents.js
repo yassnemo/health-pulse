@@ -413,3 +413,50 @@ export const Pagination = ({
     </nav>
   );
 };
+
+// Modal component
+export const Modal = ({ isOpen, onClose, title, children, footer }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex min-h-screen items-center justify-center p-4 text-center">
+        {/* Overlay */}
+        <div 
+          className="fixed inset-0 bg-secondary-900 bg-opacity-50 transition-opacity" 
+          aria-hidden="true"
+          onClick={onClose}
+        />
+        
+        {/* Modal panel */}
+        <div className="inline-block w-full max-w-md transform overflow-hidden rounded-lg bg-white text-left align-middle shadow-xl transition-all">
+          {/* Modal header */}
+          <div className="bg-white px-4 py-3 border-b border-secondary-200 flex justify-between items-center">
+            <h3 className="text-lg font-medium text-secondary-900">{title}</h3>
+            <button
+              type="button"
+              className="text-secondary-500 hover:text-secondary-700"
+              onClick={onClose}
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          
+          {/* Modal content */}
+          <div className="bg-white px-4 py-3">
+            {children}
+          </div>
+          
+          {/* Modal footer */}
+          {footer && (
+            <div className="bg-secondary-50 px-4 py-3 border-t border-secondary-200 flex justify-end space-x-2">
+              {footer}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { RiskBadge, RiskScore } from './RiskIndicators';
+import { RiskBadge, RiskScore } from '../risk/RiskIndicators';
 import { formatDateTime, formatPatientName } from '../../utils/formatters';
 import { Card, Badge } from '../ui/UIComponents';
 import { UserIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
