@@ -1,0 +1,13 @@
+fastapi==0.95.1
+uvicorn==0.22.0
+httpx==0.24.1
+python-jose==3.3.0
+python-multipart==0.0.6
+passlib==1.7.4
+python-dotenv==1.0.0
+sqlalchemy==2.0.15
+psycopg2-binary==2.9.6
+bcrypt==4.0.1
+prometheus-fastapi-instrumentator==6.0.0
+pydantic==1.10.8
+starlette-exporter==0.15.0
