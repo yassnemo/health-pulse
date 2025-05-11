@@ -2,8 +2,8 @@ import axios from 'axios';
 
 // Create axios instance with default config
 export const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || '',
-  timeout: 10000,
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000',
+  timeout: parseInt(process.env.REACT_APP_API_TIMEOUT) || 10000,
   headers: {
     'Content-Type': 'application/json',
   }
@@ -13,7 +13,8 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Get token from localStorage if it exists
-    const token = localStorage.getItem('token');
+    const storageKey = process.env.REACT_APP_AUTH_STORAGE_KEY || 'token';
+    const token = localStorage.getItem(storageKey);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
