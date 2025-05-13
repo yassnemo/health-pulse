@@ -5,9 +5,8 @@ import Header from '../navigation/Header';
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
-  return (
-    <div className="flex h-screen overflow-hidden bg-secondary-50">
+    return (
+    <div className="flex h-screen overflow-hidden bg-gradient-to-br from-secondary-50 to-secondary-100">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       
@@ -17,14 +16,21 @@ const DashboardLayout = () => {
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         
         {/* Main content */}
-        <main className="flex-grow p-4 sm:p-6 md:p-8">
-          <Outlet />
+        <main className="flex-grow p-4 sm:p-6 md:p-8 animate-fade-in">
+          <div className="max-w-7xl mx-auto">
+            <Outlet />
+          </div>
         </main>
         
         {/* Footer */}
-        <footer className="p-4 bg-white border-t border-secondary-200">
-          <div className="text-sm text-center text-secondary-500">
+        <footer className="p-4 bg-white border-t border-secondary-200 shadow-inner">
+          <div className="max-w-7xl mx-auto flex justify-between items-center text-sm text-secondary-500">
             <p>© {new Date().getFullYear()} HealthPulse Analytics. All rights reserved.</p>
+            <div className="flex space-x-4">
+              <a href="#" className="hover:text-primary-600 transition-colors">Privacy</a>
+              <a href="#" className="hover:text-primary-600 transition-colors">Terms</a>
+              <a href="#" className="hover:text-primary-600 transition-colors">Contact</a>
+            </div>
           </div>
         </footer>
       </div>

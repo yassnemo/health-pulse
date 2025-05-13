@@ -31,21 +31,30 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     { name: 'Users', href: '/admin/users', icon: UserIcon },
     { name: 'Audit Logs', href: '/admin/audit-logs', icon: ClipboardDocumentListIcon },
   ];
-  
-  // Nav item component
+    // Nav item component
   const NavItem = ({ item }) => (
     <NavLink
       to={item.href}
       className={({ isActive }) => `
-        flex items-center px-4 py-2 rounded-md text-sm font-medium
+        flex items-center px-4 py-2.5 rounded-lg text-sm font-medium mb-1
+        transition-all duration-150
         ${isActive
-          ? 'bg-primary-700 text-white'
-          : 'text-secondary-100 hover:bg-primary-600 hover:text-white'
+          ? 'bg-primary-600 text-white shadow-md translate-x-1'
+          : 'text-secondary-100 hover:bg-primary-700/30 hover:text-white hover:translate-x-1'
         }
       `}
     >
-      <item.icon className="mr-3 flex-shrink-0 h-6 w-6" aria-hidden="true" />
-      {item.name}
+      {({ isActive }) => (
+        <>
+          <div className={`rounded-md p-1.5 mr-3 flex-shrink-0 ${isActive ? 'bg-white/20' : 'bg-primary-700/30'}`}>
+            <item.icon className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <span>{item.name}</span>
+          {isActive && (
+            <span className="ml-auto w-1 h-5 rounded-full bg-accent-400"></span>
+          )}
+        </>
+      )}
     </NavLink>
   );
 
@@ -99,54 +108,65 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   </button>
                 </div>
               </Transition.Child>
-              
-              {/* Sidebar content */}
+                {/* Sidebar content */}
               <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                 {/* Logo */}
                 <div className="flex-shrink-0 flex items-center px-4">
-                  <Link to="/dashboard">
-                    <img
-                      className="h-10 w-auto"
-                      src={logo}
-                      alt="HealthPulse Analytics"
-                    />
+                  <Link 
+                    to="/dashboard" 
+                    className="flex items-center"
+                  >
+                    <div className="bg-white/10 p-2 rounded-xl shadow-inner">
+                      <img
+                        className="h-10 w-auto animate-float"
+                        src={logo}
+                        alt="HealthPulse Analytics"
+                      />
+                    </div>
+                    <span className="ml-2 text-white text-lg font-bold">HealthPulse</span>
                   </Link>
                 </div>
+                    {/* Navigation */}
+              <nav className="mt-8 px-3 space-y-1">
+                {navigation.map((item) => (
+                  <NavItem key={item.name} item={item} />
+                ))}
                 
-                {/* Navigation */}
-                <nav className="mt-5 px-2 space-y-1">
-                  {navigation.map((item) => (
-                    <NavItem key={item.name} item={item} />
-                  ))}
-                  
-                  {/* Admin nav section */}
-                  {currentUser && currentUser.role === 'admin' && (
-                    <div className="pt-4 mt-4 border-t border-primary-700">
-                      <h3 className="px-3 text-xs font-semibold text-secondary-300 uppercase tracking-wider">
-                        Admin
+                {/* Admin nav section */}
+                {currentUser && currentUser.role === 'admin' && (
+                  <div className="pt-6 mt-6 border-t border-primary-700/50">
+                    <div className="flex items-center px-3 mb-2">
+                      <div className="h-8 w-1 bg-accent-500 rounded-full mr-2"></div>
+                      <h3 className="text-xs font-bold text-accent-300 uppercase tracking-wider">
+                        Admin Controls
                       </h3>
-                      <div className="mt-2 space-y-1">
-                        {adminNavigation.map((item) => (
-                          <NavItem key={item.name} item={item} />
-                        ))}
-                      </div>
                     </div>
-                  )}
-                </nav>
-              </div>
-              
-              {/* User info */}
-              <div className="flex-shrink-0 flex border-t border-primary-700 p-4">
-                <div className="flex items-center">
-                  <div className="bg-primary-900 rounded-full p-1">
-                    <UserIcon className="h-6 w-6 text-secondary-100" aria-hidden="true" />
+                    <div className="mt-2 space-y-1">
+                      {adminNavigation.map((item) => (
+                        <NavItem key={item.name} item={item} />
+                      ))}
+                    </div>
                   </div>
-                  <div className="ml-3">
-                    <p className="text-base font-medium text-white">{currentUser?.name || 'User'}</p>
-                    <p className="text-sm font-medium text-primary-300">{currentUser?.role || ''}</p>
+                )}
+              </nav>
+              </div>
+                  {/* User info */}
+            <div className="flex-shrink-0 border-t border-primary-700/50 p-4">
+              <div className="flex items-center bg-primary-900/50 rounded-xl p-3 shadow-inner">
+                <div className="bg-gradient-to-br from-primary-600 to-accent-600 rounded-full p-1.5 shadow-md">
+                  <UserIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                </div>
+                <div className="ml-3">
+                  <p className="text-base font-semibold text-white">{currentUser?.name || 'User'}</p>
+                  <div className="flex items-center mt-0.5">
+                    <span className="h-2 w-2 bg-success-400 rounded-full animate-pulse-subtle"></span>
+                    <p className="text-xs font-medium text-primary-200 ml-1.5">
+                      {currentUser?.role === 'admin' ? 'Administrator' : currentUser?.role || 'Online'}
+                    </p>
                   </div>
                 </div>
               </div>
+            </div>
             </div>
           </Transition.Child>
         </Dialog>
@@ -155,31 +175,39 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       {/* Desktop sidebar */}
       <div className="hidden lg:flex lg:flex-shrink-0">
         <div className="flex flex-col w-64">
-          <div className="flex flex-col h-0 flex-1 bg-primary-800">
-            {/* Logo */}
+          <div className="flex flex-col h-0 flex-1 bg-primary-800">            {/* Logo */}
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
               <div className="flex items-center flex-shrink-0 px-4">
-                <Link to="/dashboard">
-                  <img
-                    className="h-10 w-auto"
-                    src={logo}
-                    alt="HealthPulse Analytics"
-                  />
+                <Link 
+                  to="/dashboard" 
+                  className="flex items-center"
+                >
+                  <div className="bg-white/10 p-2 rounded-xl shadow-inner">
+                    <img
+                      className="h-10 w-auto animate-float"
+                      src={logo}
+                      alt="HealthPulse Analytics"
+                    />
+                  </div>
+                  <span className="ml-2 text-white text-lg font-bold">HealthPulse</span>
                 </Link>
               </div>
               
               {/* Navigation */}
-              <nav className="mt-5 flex-1 px-2 space-y-1">
+              <nav className="mt-8 flex-1 px-3 space-y-1">
                 {navigation.map((item) => (
                   <NavItem key={item.name} item={item} />
                 ))}
                 
                 {/* Admin nav section */}
                 {currentUser && currentUser.role === 'admin' && (
-                  <div className="pt-4 mt-4 border-t border-primary-700">
-                    <h3 className="px-3 text-xs font-semibold text-secondary-300 uppercase tracking-wider">
-                      Admin
-                    </h3>
+                  <div className="pt-6 mt-6 border-t border-primary-700/50">
+                    <div className="flex items-center px-3 mb-2">
+                      <div className="h-8 w-1 bg-accent-500 rounded-full mr-2"></div>
+                      <h3 className="text-xs font-bold text-accent-300 uppercase tracking-wider">
+                        Admin Controls
+                      </h3>
+                    </div>
                     <div className="mt-2 space-y-1">
                       {adminNavigation.map((item) => (
                         <NavItem key={item.name} item={item} />
@@ -189,16 +217,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 )}
               </nav>
             </div>
-            
-            {/* User info */}
-            <div className="flex-shrink-0 flex border-t border-primary-700 p-4">
-              <div className="flex items-center">
-                <div className="bg-primary-900 rounded-full p-1">
-                  <UserIcon className="h-6 w-6 text-secondary-100" aria-hidden="true" />
+              {/* User info */}
+            <div className="flex-shrink-0 border-t border-primary-700/50 p-4">
+              <div className="flex items-center bg-primary-900/50 rounded-xl p-3 shadow-inner">
+                <div className="bg-gradient-to-br from-primary-600 to-accent-600 rounded-full p-1.5 shadow-md">
+                  <UserIcon className="h-6 w-6 text-white" aria-hidden="true" />
                 </div>
                 <div className="ml-3">
-                  <p className="text-base font-medium text-white">{currentUser?.name || 'User'}</p>
-                  <p className="text-sm font-medium text-primary-300">{currentUser?.role || ''}</p>
+                  <p className="text-base font-semibold text-white">{currentUser?.name || 'User'}</p>
+                  <div className="flex items-center mt-0.5">
+                    <span className="h-2 w-2 bg-success-400 rounded-full animate-pulse-subtle"></span>
+                    <p className="text-xs font-medium text-primary-200 ml-1.5">
+                      {currentUser?.role === 'admin' ? 'Administrator' : currentUser?.role || 'Online'}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

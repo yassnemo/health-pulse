@@ -128,3 +128,78 @@ export const getVitalUnit = (vitalName) => {
   
   return units[vitalName] || '';
 };
+
+// Format a date as a relative time (e.g., "2 hours ago")
+export const formatRelativeTime = (dateStr) => {
+  if (!dateStr) return '';
+  
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffSeconds = Math.floor((now - date) / 1000);
+  
+  if (diffSeconds < 60) {
+    return 'just now';
+  }
+  
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  if (diffMinutes < 60) {
+    return `${diffMinutes} ${diffMinutes === 1 ? 'minute' : 'minutes'} ago`;
+  }
+  
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) {
+    return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+  }
+  
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 7) {
+    return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+  }
+  
+  return formatDate(dateStr);
+};
+
+// Get a color for data visualization based on an index
+export const getChartColor = (index) => {
+  const colors = [
+    '#4f46e5', // primary
+    '#10b981', // success
+    '#f59e0b', // warning
+    '#ef4444', // danger
+    '#8b5cf6', // accent
+    '#3b82f6', // blue
+    '#ec4899', // pink
+    '#14b8a6', // teal
+  ];
+  
+  return colors[index % colors.length];
+};
+
+// Format a large number with abbreviations (K, M, B)
+export const formatLargeNumber = (number) => {
+  if (number === null || number === undefined) return '';
+  
+  if (number >= 1000000000) {
+    return (number / 1000000000).toFixed(1) + 'B';
+  }
+  
+  if (number >= 1000000) {
+    return (number / 1000000).toFixed(1) + 'M';
+  }
+  
+  if (number >= 1000) {
+    return (number / 1000).toFixed(1) + 'K';
+  }
+  
+  return number.toString();
+};
+
+// Generate initials from a name
+export const getInitials = (name) => {
+  if (!name) return '';
+  
+  const names = name.split(' ');
+  if (names.length === 1) return name.charAt(0);
+  
+  return names[0].charAt(0) + names[names.length - 1].charAt(0);
+};
