@@ -5,16 +5,82 @@
 # Ensure the directory exists
 mkdir -p /tmp/metrics_export
 
-# Generate sample patient metrics
+# Generate sample patient metrics with more realistic variations and patient conditions
 generate_patient_metrics() {
   local timestamp=$(date +%s)
   local patient_id=$1
-  local risk_score=$(echo "scale=2; $RANDOM % 100 / 100" | bc)
-  local heart_rate=$(( 60 + $RANDOM % 40 ))
-  local blood_pressure_systolic=$(( 110 + $RANDOM % 40 ))
-  local blood_pressure_diastolic=$(( 70 + $RANDOM % 20 ))
-  local temperature=$(echo "scale=1; 36.5 + $RANDOM % 20 / 10" | bc)
-  local spo2=$(( 94 + $RANDOM % 7 ))
+  
+  # Patient condition simulation (0=healthy, 1=moderate risk, 2=high risk)
+  # Each patient maintains their condition with small random variations
+  if [ -z "${patient_conditions[$patient_id]}" ]; then
+    # First time seeing this patient, assign a condition
+    # 60% healthy, 30% moderate risk, 10% high risk
+    local condition_roll=$(( $RANDOM % 100 ))
+    if [ $condition_roll -lt 60 ]; then
+      patient_conditions[$patient_id]=0
+    elif [ $condition_roll -lt 90 ]; then
+      patient_conditions[$patient_id]=1
+    else
+      patient_conditions[$patient_id]=2
+    fi
+  fi
+  
+  # Small chance of condition changing
+  local change_chance=$(( $RANDOM % 100 ))
+  if [ $change_chance -lt 5 ]; then
+    # 5% chance of condition changing
+    if [ ${patient_conditions[$patient_id]} -eq 0 ]; then
+      # Healthy patient might get worse
+      patient_conditions[$patient_id]=1
+    elif [ ${patient_conditions[$patient_id]} -eq 1 ]; then
+      # Moderate risk patient might get better or worse
+      if [ $change_chance -lt 2 ]; then
+        patient_conditions[$patient_id]=2
+      else
+        patient_conditions[$patient_id]=0
+      fi
+    else
+      # High risk patient might get better
+      patient_conditions[$patient_id]=1
+    fi
+  fi
+  
+  local condition=${patient_conditions[$patient_id]}
+  
+  # Generate vitals based on patient condition
+  local risk_score
+  local heart_rate
+  local blood_pressure_systolic
+  local blood_pressure_diastolic
+  local temperature
+  local spo2
+  
+  case $condition in
+    0) # Healthy
+      risk_score=$(echo "scale=2; ($RANDOM % 30) / 100" | bc)
+      heart_rate=$(( 60 + $RANDOM % 20 ))
+      blood_pressure_systolic=$(( 110 + $RANDOM % 20 ))
+      blood_pressure_diastolic=$(( 70 + $RANDOM % 10 ))
+      temperature=$(echo "scale=1; 36.5 + ($RANDOM % 10) / 10" | bc)
+      spo2=$(( 97 + $RANDOM % 4 ))
+      ;;
+    1) # Moderate risk
+      risk_score=$(echo "scale=2; 0.3 + ($RANDOM % 30) / 100" | bc)
+      heart_rate=$(( 80 + $RANDOM % 30 ))
+      blood_pressure_systolic=$(( 130 + $RANDOM % 30 ))
+      blood_pressure_diastolic=$(( 80 + $RANDOM % 15 ))
+      temperature=$(echo "scale=1; 37.0 + ($RANDOM % 15) / 10" | bc)
+      spo2=$(( 92 + $RANDOM % 6 ))
+      ;;
+    2) # High risk
+      risk_score=$(echo "scale=2; 0.6 + ($RANDOM % 40) / 100" | bc)
+      heart_rate=$(( 100 + $RANDOM % 40 ))
+      blood_pressure_systolic=$(( 150 + $RANDOM % 40 ))
+      blood_pressure_diastolic=$(( 95 + $RANDOM % 20 ))
+      temperature=$(echo "scale=1; 37.5 + ($RANDOM % 20) / 10" | bc)
+      spo2=$(( 85 + $RANDOM % 10 ))
+      ;;
+  esac
   
   echo "patient_risk_score{patient_id=\"$patient_id\"} $risk_score $timestamp"
   echo "patient_vital_heart_rate{patient_id=\"$patient_id\"} $heart_rate $timestamp"
@@ -71,6 +137,9 @@ echo "Generating sample metrics data..."
 OUTPUT_FILE="/tmp/metrics_export/sample_metrics.txt"
 rm -f $OUTPUT_FILE
 touch $OUTPUT_FILE
+
+# Initialize patient conditions array to track patient state over time
+declare -A patient_conditions
 
 # Generate data every 5 seconds for demonstration
 for i in {1..100}; do
