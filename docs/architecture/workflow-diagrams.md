@@ -112,14 +112,14 @@ graph LR
     Start((Start)) --> A[Clinician Opens Browser];
     A --> B(Navigates to HealthPulse URL: <br> e.g., http://localhost:8082);
     B --> C{Login Page};
-    C --> D[Enters Credentials <br> (e.g., nurse/password)];
+    C --> D["Enters Credentials <br> (e.g., nurse/password)"];
     D --> E{Backend Authentication <br> (via API Gateway)};
-    E -- Valid Credentials --> F[Main Dashboard Displayed <br> (Patient List / Overview)];
+    E -- Valid Credentials --> F["Main Dashboard Displayed <br> (Patient List / Overview)"];
     E -- Invalid Credentials --> C;
 
     F --> G{User Action: Selects a Patient};
     G --> H[Patient Detail View Loaded];
-    H --> I[Displays: <br> - Demographics (from PostgreSQL) <br> - Vital Signs Charts (from InfluxDB) <br> - Risk Scores (from ML Model Server)];
+    H --> I["Displays: <br> - Demographics (from PostgreSQL) <br> - Vital Signs Charts (from InfluxDB) <br> - Risk Scores (from ML Model Server)"];
     I --> J{User Action: Interacts with Charts/Data <br> or Navigates Back};
     J -- View Other Patients --> F;
     J -- Log Out --> K[User Action: Logs Out];
