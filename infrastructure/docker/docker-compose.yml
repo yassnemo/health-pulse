@@ -103,7 +103,6 @@ services:
       POSTGRES_DB: healthpulse
       MODEL_PATH: /app/models
       LOG_LEVEL: INFO
-
   # --- API GATEWAY ---
   api-gateway:
     build:
@@ -123,7 +122,7 @@ services:
       POSTGRES_PASSWORD: healthpulsepassword
       POSTGRES_DB: healthpulse
       JWT_SECRET: healthpulse-super-secret-key-change-in-production
-      CORS_ORIGINS: "http://localhost:3000"
+      CORS_ORIGINS: "http://localhost:3000,http://localhost:5000"
       LOG_LEVEL: INFO
 
   # --- FRONTEND ---
@@ -136,7 +135,6 @@ services:
       - "3000:80"
     depends_on:
       - api-gateway
-
   # --- MONITORING ---
   prometheus:
     image: prom/prometheus:v2.43.0
@@ -148,6 +146,15 @@ services:
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      
+  # --- SAMPLE METRICS GENERATOR ---
+  metrics-exporter:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/metrics-exporter.Dockerfile
+    container_name: metrics-exporter
+    ports:
+      - "8888:8888"
 
   grafana:
     image: grafana/grafana:9.5.0
@@ -157,6 +164,10 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: healthpulse
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      GF_AUTH_DISABLE_LOGIN_FORM: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/etc/grafana/provisioning/dashboards/json/healthpulse-dashboard.json"
     volumes:
       - grafana_data:/var/lib/grafana
       - ../../infrastructure/monitoring/grafana/provisioning:/etc/grafana/provisioning

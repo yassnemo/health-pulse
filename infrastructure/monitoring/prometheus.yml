@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "api_gateway"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["api-gateway:8080"]
+  
+  - job_name: "ml_model_server"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["ml-model-server:8000"]
+      
+  - job_name: "metrics_exporter"
+    metrics_path: "/metrics"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["metrics-exporter:8888"]
