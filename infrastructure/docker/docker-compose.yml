@@ -130,11 +130,11 @@ services:
     build:
       context: ../../frontend
       dockerfile: Dockerfile
-    container_name: frontend
-    ports:
-      - "3000:80"
+    container_name: frontend    ports:
+      - "3006:80"
     depends_on:
       - api-gateway
+      
   # --- MONITORING ---
   prometheus:
     image: prom/prometheus:v2.43.0
@@ -155,19 +155,18 @@ services:
     container_name: metrics-exporter
     ports:
       - "8888:8888"
-
+      
   grafana:
     image: grafana/grafana:9.5.0
     container_name: grafana
-    ports:
-      - "3001:3000"
+    network_mode: host
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: healthpulse
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
       GF_AUTH_DISABLE_LOGIN_FORM: "false"
-      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/etc/grafana/provisioning/dashboards/json/healthpulse-dashboard.json"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/etc/grafana/provisioning/dashboards/json/healthpulse-overview-dashboard.json"
     volumes:
       - grafana_data:/var/lib/grafana
       - ../../infrastructure/monitoring/grafana/provisioning:/etc/grafana/provisioning
