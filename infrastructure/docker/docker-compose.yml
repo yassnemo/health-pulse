@@ -130,8 +130,9 @@ services:
     build:
       context: ../../frontend
       dockerfile: Dockerfile
-    container_name: frontend    ports:
-      - "3006:80"
+    container_name: frontend
+    ports:
+      - "8082:80"
     depends_on:
       - api-gateway
       
