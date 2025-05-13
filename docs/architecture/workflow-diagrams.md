@@ -110,21 +110,21 @@ This flowchart outlines a typical interaction sequence for a clinician using the
 ```mermaid
 graph LR
     Start((Start)) --> A[Clinician Opens Browser];
-    A --> B(Navigates to HealthPulse URL: <br> e.g., http://localhost:8082);
+    A --> B("Navigates to HealthPulse URL: <br> e.g., http://localhost:8082");
     B --> C{Login Page};
     C --> D["Enters Credentials <br> (e.g., nurse/password)"];
-    D --> E{Backend Authentication <br> (via API Gateway)};
+    D --> E{"Backend Authentication <br> (via API Gateway)"};
     E -- Valid Credentials --> F["Main Dashboard Displayed <br> (Patient List / Overview)"];
     E -- Invalid Credentials --> C;
 
     F --> G{User Action: Selects a Patient};
     G --> H[Patient Detail View Loaded];
     H --> I["Displays: <br> - Demographics (from PostgreSQL) <br> - Vital Signs Charts (from InfluxDB) <br> - Risk Scores (from ML Model Server)"];
-    I --> J{User Action: Interacts with Charts/Data <br> or Navigates Back};
+    I --> J{"User Action: Interacts with Charts/Data <br> or Navigates Back"};
     J -- View Other Patients --> F;
     J -- Log Out --> K[User Action: Logs Out];
 
-    F --> K_alt{User Action: Uses Search/Filter};
+    F --> K_alt{"User Action: Uses Search/Filter"};
     K_alt --> F;
 
     K --> End((End Session));
