@@ -27,7 +27,7 @@ Request body:
 ```json
 {
   "username": "clinician@hospital.org",
-  "password": "your_password"
+  "password": "123456"
 }
 ```
 

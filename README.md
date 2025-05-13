@@ -38,13 +38,33 @@ HealthPulse Analytics uses a modular microservices architecture with distinct co
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/healthpulse.git
-cd healthpulse
+git clone https://github.com/yassnemo/health-pulse.git
+cd health-pulse
+
+# Create environment files
+cp frontend/.env.example frontend/.env
+cp backend/.env.example backend/.env
 
 # Start all services with Docker Compose
-cd infrastructure/docker
-docker-compose up
+bash scripts/start-services.sh
+
+# Optional: Load sample data for testing
+bash scripts/setup-sample-data.sh
 ```
+
+### Default Login Credentials
+
+For testing purposes, you can use these default credentials:
+
+- **Admin**: username: `admin`, password: `password`
+- **Doctor**: username: `doctor`, password: `password`
+- **Nurse**: username: `nurse`, password: `password`
+
+### Access the Application
+
+- Frontend Dashboard: http://localhost:3000
+- API Documentation: http://localhost:8080/docs
+- Grafana Monitoring: http://localhost:3001 (admin/healthpulse)
 
 For detailed setup instructions, see the [Setup Documentation](docs/setup/README.md).
 
