@@ -68,17 +68,17 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
   }, []);
   
   return (
-    <div className="space-y-6">      {/* Dashboard Header */}
-      <div className="flex justify-between items-center bg-white p-5 rounded-xl shadow-card mb-6 animate-slide-down">
+    <div className="space-y-6">      {/* Dashboard Header - Updated with new theme */}
+      <div className="flex justify-between items-center bg-theme-panel p-5 rounded-lg shadow-card mb-6 animate-fade-in">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-700 to-accent-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl font-semibold text-theme-text-primary">
             HealthPulse Dashboard
           </h1>
-          <p className="text-secondary-500 mt-1">Overview of hospital analytics and patient risk assessment</p>
+          <p className="text-theme-text-secondary mt-1 text-sm">Overview of hospital analytics and patient risk assessment</p>
         </div>
         <div className="flex space-x-3">
           <Button 
-            variant="outline-primary" 
+            variant="outline" 
             size="md" 
             icon={
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,12 +102,11 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
           </Button>
         </div>
       </div>
-        {/* Statistics Cards */}
+        {/* Statistics Cards - Updated with clean clinical look */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Total Patients */}
         <Card 
-          className="h-full" 
-          variant="default" 
+          className="h-full bg-theme-panel" 
           hover={true} 
           animate={true}
         >
@@ -116,14 +115,14 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
               <Spinner size="md" />
             </div>
           ) : (
-            <div className="flex items-start w-full">
-              <div className="p-3.5 rounded-lg bg-primary-100/80 shadow-inner">
-                <UsersIcon className="h-6 w-6 text-primary-700 animate-pulse-subtle" />
+            <div className="flex items-start w-full p-4">
+              <div className="p-3 rounded-lg bg-blue-50">
+                <UsersIcon className="h-5 w-5 text-theme-primary-accent" />
               </div>
               <div className="ml-4 flex flex-col">
-                <span className="text-sm font-medium text-secondary-500">Total Patients</span>
-                <span className="text-2xl font-bold text-secondary-900">{stats.totalPatients}</span>
-                <span className="text-xs text-secondary-400 mt-0.5">Currently admitted</span>
+                <span className="text-sm font-medium text-theme-text-secondary">Total Patients</span>
+                <span className="text-2xl font-semibold text-theme-text-primary">{stats.totalPatients}</span>
+                <span className="text-xs text-theme-text-secondary mt-1">Currently admitted</span>
               </div>
             </div>
           )}
@@ -131,8 +130,7 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
         
         {/* High Risk Patients */}
         <Card 
-          className="h-full" 
-          variant="danger" 
+          className="h-full bg-theme-panel" 
           hover={true} 
           animate={true}
         >
@@ -141,19 +139,19 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
               <Spinner size="md" />
             </div>
           ) : (
-            <div className="flex items-start w-full">
-              <div className="p-3.5 rounded-lg bg-danger-100 shadow-inner">
-                <ExclamationTriangleIcon className="h-6 w-6 text-danger-700 animate-pulse-subtle" />
+            <div className="flex items-start w-full p-4">
+              <div className="p-3 rounded-lg bg-red-50">
+                <ExclamationTriangleIcon className="h-5 w-5 text-theme-danger" />
               </div>
               <div className="ml-4 flex flex-col">
-                <span className="text-sm font-medium text-secondary-500">High Risk Patients</span>
+                <span className="text-sm font-medium text-theme-text-secondary">High Risk Patients</span>
                 <div className="flex items-baseline">
-                  <span className="text-2xl font-bold text-danger-700">{stats.highRiskPatients}</span>
-                  <span className="ml-2 text-sm font-medium text-danger-600">
+                  <span className="text-2xl font-semibold text-theme-text-primary">{stats.highRiskPatients}</span>
+                  <span className="ml-2 text-sm text-theme-danger">
                     {((stats.highRiskPatients / stats.totalPatients) * 100).toFixed(1)}%
                   </span>
                 </div>
-                <span className="text-xs text-secondary-400 mt-0.5">Require attention</span>
+                <span className="text-xs text-theme-text-secondary mt-1">Require attention</span>
               </div>
             </div>
           )}
@@ -161,8 +159,7 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
         
         {/* Active Alerts */}
         <Card 
-          className="h-full" 
-          variant="warning" 
+          className="h-full bg-theme-panel" 
           hover={true} 
           animate={true}
         >
@@ -171,14 +168,14 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
               <Spinner size="md" />
             </div>
           ) : (
-            <div className="flex items-start w-full">
-              <div className="p-3.5 rounded-lg bg-warning-100 shadow-inner">
-                <BellIcon className="h-6 w-6 text-warning-700 animate-pulse-subtle" />
+            <div className="flex items-start w-full p-4">
+              <div className="p-3 rounded-lg bg-amber-50">
+                <BellIcon className="h-5 w-5 text-theme-warning" />
               </div>
               <div className="ml-4 flex flex-col">
-                <span className="text-sm font-medium text-secondary-500">Active Alerts</span>
-                <span className="text-2xl font-bold text-warning-700">{stats.alertsCount}</span>
-                <span className="text-xs text-secondary-400 mt-0.5">Pending review</span>
+                <span className="text-sm font-medium text-theme-text-secondary">Active Alerts</span>
+                <span className="text-2xl font-semibold text-theme-text-primary">{stats.alertsCount}</span>
+                <span className="text-xs text-theme-text-secondary mt-1">Pending review</span>
               </div>
             </div>
           )}
@@ -186,8 +183,7 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
         
         {/* Average Risk Score */}
         <Card 
-          className="h-full" 
-          variant={stats?.averageRisk > 0.5 ? "warning" : "success"} 
+          className="h-full bg-theme-panel" 
           hover={true} 
           animate={true}
         >
@@ -196,66 +192,72 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
               <Spinner size="md" />
             </div>
           ) : (
-            <div className="flex items-start w-full">
-              <div className="p-3.5 rounded-lg bg-secondary-100 shadow-inner">
-                <ChartBarSquareIcon className="h-6 w-6 text-secondary-700 animate-pulse-subtle" />
+            <div className="flex items-start w-full p-4">
+              <div className="p-3 rounded-lg bg-green-50">
+                <ChartBarSquareIcon className="h-5 w-5 text-theme-success" />
               </div>
               <div className="ml-4 flex flex-col">
-                <span className="text-sm font-medium text-secondary-500">Average Risk</span>
+                <span className="text-sm font-medium text-theme-text-secondary">Average Risk</span>
                 <div className="flex items-baseline">
-                  <span className="text-2xl font-bold text-secondary-900">{(stats.averageRisk * 100).toFixed(1)}%</span>
-                  <span className="ml-2 transform hover:scale-110 transition-transform">
+                  <span className="text-2xl font-semibold text-theme-text-primary">{(stats.averageRisk * 100).toFixed(1)}%</span>
+                  <span className="ml-2">
                     <RiskBadge score={stats.averageRisk} />
                   </span>
                 </div>
-                <span className="text-xs text-secondary-400 mt-0.5">Hospital-wide</span>
+                <span className="text-xs text-theme-text-secondary mt-1">Hospital-wide</span>
               </div>
             </div>
           )}
         </Card>
       </div>
-        {/* Main Dashboard Content */}
+        {/* Main Dashboard Content - Updated with clean clinical design */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Risk Distribution Chart */}
         <Card 
           title="Risk Distribution" 
-          className="col-span-1 lg:col-span-2"
-          variant="primary"
+          className="col-span-1 lg:col-span-2 bg-theme-panel flex flex-col" // Added flex flex-col for better height management
           hover={true}
           animate={true}
+          // Remove fixed height from card if any, let content define it or use min-height
         >
           {riskDistribution.length === 0 ? (
-            <div className="flex justify-center py-12">
+            <div className="flex justify-center items-center flex-grow py-12">
               <Spinner />
             </div>
           ) : (
-            <div className="p-4 animate-fade-in">
-              <BarChart 
-                data={riskDistribution}
-                width={600}
-                height={300}
-                className="w-full"
-              />
-              <div className="mt-4 flex justify-between text-sm text-secondary-500 border-t border-primary-100 pt-4">
-                <div className="flex items-center">
-                  <span className="w-3 h-3 rounded-full bg-primary-500 mr-2"></span>
-                  <span>Current Period</span>
-                </div>
-                <div>
-                  <Button variant="ghost-primary" size="xs">
-                    View Details
-                  </Button>
+            // This div will act as the main container for chart and its footer
+            <div className="flex flex-col flex-grow p-0"> {/* Remove padding here, apply to inner elements if needed */}
+              {/* Chart container - allow it to grow and set a specific height or let it be flexible */}
+              <div className="p-4 animate-fade-in flex-grow min-h-[300px]"> 
+                <BarChart 
+                  data={riskDistribution}
+                  // width and height props are removed from here to allow BarChart to be responsive
+                  className="w-full h-full" // This className is for the div BarChart creates
+                />
+              </div>
+              {/* Footer for the chart card */}
+              <div className="border-t border-theme-border mt-auto pt-3 pb-3 px-4 text-sm">
+                <div className="flex justify-between items-center text-theme-text-secondary">
+                  <div className="flex items-center">
+                    {/* Legend can be part of the chart or styled here */}
+                    <span className="w-2.5 h-2.5 rounded-full bg-theme-primary-accent mr-2"></span>
+                    <span>Current Period</span>
+                  </div>
+                  <div>
+                    <Button variant="outline" size="xs">
+                      View Details
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
           )}
         </Card>
         
-        {/* Hospital Occupancy */}
+        {/* Hospital Overview */}
         <Card 
           title="Hospital Overview" 
-          className="col-span-1"
-          variant="accent"
+          className="col-span-1 bg-theme-panel"
           hover={true}
           animate={true}
         >
@@ -263,28 +265,29 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
             <div className="flex justify-center py-12">
               <Spinner />
             </div>
-          ) : (            <div className="space-y-4 animate-fade-in">
+          ) : (
+            <div className="space-y-4 animate-fade-in p-4">
               <div className="flex justify-center py-3">
                 <RiskGauge score={stats?.averageRisk || 0} size="md" label="Hospital Risk Level" />
               </div>
               
-              <div className="border rounded-lg p-3 bg-white shadow-sm">
-                <h4 className="text-sm font-medium text-accent-800 border-b border-accent-100 pb-2 mb-3">Department Statistics</h4>
+              <div className="border rounded-lg p-3 bg-theme-panel shadow-sm">
+                <h4 className="text-sm font-medium text-theme-text-primary border-b border-theme-border pb-2 mb-3">Department Statistics</h4>
                 <div className="space-y-3">
                   {departmentStats.map((dept, index) => (
                     <div 
                       key={index} 
-                      className="flex items-center justify-between text-sm p-2 rounded-md hover:bg-accent-50 transition-colors"
+                      className="flex items-center justify-between text-sm p-2 rounded-md hover:bg-theme-border/30 transition-colors"
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
-                      <span className="font-medium text-secondary-900">{dept.department}</span>
+                      <span className="font-medium text-theme-text-primary">{dept.department}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-secondary-500 bg-secondary-50 px-2 py-0.5 rounded-md">
+                        <span className="text-theme-text-secondary bg-theme-border/50 px-2 py-0.5 rounded-md">
                           {dept.patientCount} patients
                         </span>
                         <Badge 
                           variant={dept.highRiskCount > 2 ? "red" : "yellow"}
-                          className="animate-pulse-subtle"
+                          className={dept.highRiskCount > 2 ? "animate-pulse-subtle" : ""}
                         >
                           {dept.highRiskCount} high risk
                         </Badge>
@@ -293,7 +296,7 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
                   ))}
                 </div>
                 <div className="mt-4 text-center">
-                  <Button variant="outline-accent" size="xs">
+                  <Button variant="outline" size="xs">
                     View Department Details
                   </Button>
                 </div>
@@ -302,16 +305,16 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
           )}
         </Card>
       </div>
-        {/* High Risk Patients Section */}
-      <div className="bg-danger-50/30 p-6 rounded-xl border border-danger-100">
+        {/* High Risk Patients Section - Updated with clinical color theme */}
+      <div className="bg-red-50/50 p-6 rounded-lg border border-red-100 shadow-sm">
         <div className="flex justify-between items-center mb-5">
           <div className="flex items-center">
-            <ExclamationTriangleIcon className="h-6 w-6 text-danger-600 mr-2" />
-            <h2 className="text-xl font-bold text-danger-800">High Risk Patients</h2>
+            <ExclamationTriangleIcon className="h-6 w-6 text-theme-danger mr-2" />
+            <h2 className="text-xl font-semibold text-theme-text-primary">High Risk Patients</h2>
           </div>
           <Link 
             to="/high-risk" 
-            className="text-sm text-danger-700 hover:text-danger-900 font-medium hover:underline flex items-center group"
+            className="text-sm text-theme-primary-accent hover:text-theme-primary-hover font-medium flex items-center group"
           >
             View all 
             <svg className="w-4 h-4 ml-1 transform transition group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -325,9 +328,9 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
             <Spinner />
           </div>
         ) : !highRiskPatients?.length ? (
-          <Card variant="default" animate={true}>
+          <Card className="bg-theme-panel animate-fade-in">
             <div className="text-center py-8">
-              <p className="text-secondary-500">No high risk patients found</p>
+              <p className="text-theme-text-secondary">No high risk patients found</p>
             </div>
           </Card>
         ) : (
@@ -344,16 +347,16 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
           </div>
         )}
       </div>
-        {/* Recent Alerts Section */}
-      <div className="bg-warning-50/30 p-6 rounded-xl border border-warning-100">
+        {/* Recent Alerts Section - Updated with clinical color theme */}
+      <div className="bg-amber-50/50 p-6 rounded-lg border border-amber-100 shadow-sm">
         <div className="flex justify-between items-center mb-5">
           <div className="flex items-center">
-            <BellIcon className="h-6 w-6 text-warning-600 mr-2" />
-            <h2 className="text-xl font-bold text-warning-800">Recent Alerts</h2>
+            <BellIcon className="h-6 w-6 text-theme-warning mr-2" />
+            <h2 className="text-xl font-semibold text-theme-text-primary">Recent Alerts</h2>
           </div>
           <Link 
             to="/alerts" 
-            className="text-sm text-warning-700 hover:text-warning-900 font-medium hover:underline flex items-center group"
+            className="text-sm text-theme-primary-accent hover:text-theme-primary-hover font-medium flex items-center group"
           >
             View all 
             <svg className="w-4 h-4 ml-1 transform transition group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -367,60 +370,60 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
             <Spinner />
           </div>
         ) : !alerts?.length ? (
-          <Card variant="default" animate={true}>
+          <Card className="bg-theme-panel animate-fade-in">
             <div className="text-center py-8">
-              <p className="text-secondary-500">No recent alerts found</p>
+              <p className="text-theme-text-secondary">No recent alerts found</p>
             </div>
           </Card>
         ) : (
-          <Card variant="default" animate={true} className="overflow-hidden">
+          <Card className="bg-theme-panel animate-fade-in overflow-hidden">
             <div className="overflow-hidden">
-              <table className="min-w-full divide-y divide-secondary-200">
-                <thead className="bg-secondary-50">
+              <table className="min-w-full divide-y divide-theme-border">
+                <thead className="bg-theme-background">
                   <tr>
                     <th 
-                      className="px-6 py-3 text-left text-xs font-semibold text-secondary-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-semibold text-theme-text-secondary uppercase tracking-wider"
                     >
                       Patient
                     </th>
                     <th 
-                      className="px-6 py-3 text-left text-xs font-semibold text-secondary-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-semibold text-theme-text-secondary uppercase tracking-wider"
                     >
                       Alert Type
                     </th>
                     <th 
-                      className="px-6 py-3 text-left text-xs font-semibold text-secondary-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-semibold text-theme-text-secondary uppercase tracking-wider"
                     >
                       Priority
                     </th>
                     <th 
-                      className="px-6 py-3 text-left text-xs font-semibold text-secondary-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-semibold text-theme-text-secondary uppercase tracking-wider"
                     >
                       Time
                     </th>
                     <th 
-                      className="px-6 py-3 text-left text-xs font-semibold text-secondary-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-semibold text-theme-text-secondary uppercase tracking-wider"
                     >
                       Status
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-secondary-200">
+                <tbody className="bg-theme-panel divide-y divide-theme-border">
                   {alerts.map((alert, index) => (
                     <tr 
                       key={alert.id} 
-                      className="hover:bg-secondary-50 transition-colors duration-150"
+                      className="hover:bg-theme-background transition-colors duration-150"
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link 
                           to={`/patients/${alert.patient_id}`} 
-                          className="text-primary-600 hover:text-primary-800 font-medium hover:underline"
+                          className="text-theme-primary-accent hover:text-theme-primary-hover font-medium"
                         >
                           {alert.patient_name}
                         </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-secondary-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-theme-text-primary">
                         {alert.alert_type}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -434,14 +437,14 @@ const Dashboard = () => {  const { data: highRiskPatients, loading: loadingHighR
                           {alert.priority}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-theme-text-secondary">
                         {alert.created_at}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 py-1 text-xs rounded-full ${
-                          alert.status === 'active' ? 'bg-warning-100 text-warning-800' : 
-                          alert.status === 'resolved' ? 'bg-success-100 text-success-800' :
-                          'bg-secondary-100 text-secondary-800'
+                          alert.status === 'active' ? 'bg-amber-100 text-amber-800' : 
+                          alert.status === 'resolved' ? 'bg-green-100 text-green-800' :
+                          'bg-gray-100 text-gray-800'
                         }`}>
                           {alert.status}
                         </span>

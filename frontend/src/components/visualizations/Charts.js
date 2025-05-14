@@ -73,7 +73,7 @@ export const LineChart = ({
           .attr('x2', innerWidth)
           .attr('y1', yScale(thresholds.upper))
           .attr('y2', yScale(thresholds.upper))
-          .attr('stroke', '#dc2626')
+          .attr('stroke', '#EF4444') // theme-danger
           .attr('stroke-width', 1)
           .attr('stroke-dasharray', '4');
         
@@ -82,7 +82,7 @@ export const LineChart = ({
           .attr('y', yScale(thresholds.upper) - 5)
           .attr('text-anchor', 'end')
           .attr('font-size', '10px')
-          .attr('fill', '#dc2626')
+          .attr('fill', '#EF4444') // theme-danger
           .text('Upper Threshold');
       }
       
@@ -93,7 +93,7 @@ export const LineChart = ({
           .attr('x2', innerWidth)
           .attr('y1', yScale(thresholds.lower))
           .attr('y2', yScale(thresholds.lower))
-          .attr('stroke', '#dc2626')
+          .attr('stroke', '#EF4444') // theme-danger
           .attr('stroke-width', 1)
           .attr('stroke-dasharray', '4');
         
@@ -102,7 +102,7 @@ export const LineChart = ({
           .attr('y', yScale(thresholds.lower) - 5)
           .attr('text-anchor', 'end')
           .attr('font-size', '10px')
-          .attr('fill', '#dc2626')
+          .attr('fill', '#EF4444') // theme-danger
           .text('Lower Threshold');
       }
     }
@@ -111,22 +111,22 @@ export const LineChart = ({
     g.append('g')
       .attr('transform', `translate(0,${innerHeight})`)
       .call(d3.axisBottom(xScale).ticks(5).tickFormat(d3.timeFormat('%H:%M')))
-      .call(g => g.select('.domain').attr('stroke', '#cbd5e1'))
-      .call(g => g.selectAll('.tick line').attr('stroke', '#cbd5e1'))
-      .call(g => g.selectAll('.tick text').attr('fill', '#64748b').attr('font-size', '10px'));
+      .call(g => g.select('.domain').attr('stroke', '#E2E8F0')) // theme-border
+      .call(g => g.selectAll('.tick line').attr('stroke', '#E2E8F0')) // theme-border
+      .call(g => g.selectAll('.tick text').attr('fill', '#4A5568').attr('font-size', '10px')); // theme-text-secondary
     
     // Add y-axis
     g.append('g')
       .call(d3.axisLeft(yScale))
-      .call(g => g.select('.domain').attr('stroke', '#cbd5e1'))
-      .call(g => g.selectAll('.tick line').attr('stroke', '#cbd5e1'))
-      .call(g => g.selectAll('.tick text').attr('fill', '#64748b').attr('font-size', '10px'));
+      .call(g => g.select('.domain').attr('stroke', '#E2E8F0')) // theme-border
+      .call(g => g.selectAll('.tick line').attr('stroke', '#E2E8F0')) // theme-border
+      .call(g => g.selectAll('.tick text').attr('fill', '#4A5568').attr('font-size', '10px')); // theme-text-secondary
     
-    // Add line path
+    // Add line path with theme color
     g.append('path')
       .datum(data)
       .attr('fill', 'none')
-      .attr('stroke', color)
+      .attr('stroke', color || '#3B82F6') // theme-primary-accent
       .attr('stroke-width', 2)
       .attr('stroke-linejoin', 'round')
       .attr('stroke-linecap', 'round')
@@ -226,35 +226,38 @@ export const LineChart = ({
 // Bar chart for risk visualization
 export const BarChart = ({ 
   data, 
-  width = 600, 
-  height = 300, 
-  margin = { top: 20, right: 30, bottom: 30, left: 50 },
+  margin = { top: 20, right: 30, bottom: 40, left: 50 }, // Increased bottom margin for labels
   xAccessor = d => d.label,
   yAccessor = d => d.value,
   xLabel = '',
   yLabel = '',
-  color = '#0284c7',
   className = '',
   maxValue = 1.0,
   onBarClick
 }) => {
   const svgRef = useRef(null);
+  const containerRef = useRef(null); // Ref for the container div
   
   useEffect(() => {
-    if (!data || data.length === 0) return;
+    if (!data || data.length === 0 || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const { width: currentWidth, height: currentHeight } = container.getBoundingClientRect();
     
     // Clear previous chart
     d3.select(svgRef.current).selectAll('*').remove();
     
-    // Calculate dimensions
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
+    // Calculate dimensions based on container size
+    const innerWidth = currentWidth - margin.left - margin.right;
+    const innerHeight = currentHeight - margin.top - margin.bottom;
+
+    if (innerWidth <= 0 || innerHeight <= 0) return; // Don't render if not enough space
     
     // Create SVG and append group
     const svg = d3
       .select(svgRef.current)
-      .attr('width', width)
-      .attr('height', height);
+      .attr('width', currentWidth)
+      .attr('height', currentHeight);
     
     const g = svg
       .append('g')
@@ -273,21 +276,24 @@ export const BarChart = ({
       .range([innerHeight, 0]);
     
     // Add x-axis
-    g.append('g')
+    const xAxis = g.append('g')
       .attr('transform', `translate(0,${innerHeight})`)
       .call(d3.axisBottom(xScale))
-      .call(g => g.select('.domain').attr('stroke', '#cbd5e1'))
-      .call(g => g.selectAll('.tick line').attr('stroke', '#cbd5e1'))
-      .call(g => g.selectAll('.tick text').attr('fill', '#64748b').attr('font-size', '10px'));
-    
+      .call(axis => axis.select('.domain').attr('stroke', '#E2E8F0')) // theme-border
+      .call(axis => axis.selectAll('.tick line').attr('stroke', '#E2E8F0')) // theme-border
+      .call(axis => axis.selectAll('.tick text')
+        .attr('fill', '#4A5568') // theme-text-secondary
+        .attr('font-size', '11px') // Slightly larger font for readability
+        .style('text-anchor', 'middle'));
+
     // Add y-axis
     g.append('g')
       .call(d3.axisLeft(yScale).ticks(5).tickFormat(d => d * 100 + '%'))
-      .call(g => g.select('.domain').attr('stroke', '#cbd5e1'))
-      .call(g => g.selectAll('.tick line').attr('stroke', '#cbd5e1'))
-      .call(g => g.selectAll('.tick text').attr('fill', '#64748b').attr('font-size', '10px'));
+      .call(axis => axis.select('.domain').attr('stroke', '#E2E8F0')) // theme-border
+      .call(axis => axis.selectAll('.tick line').attr('stroke', '#E2E8F0')) // theme-border
+      .call(axis => axis.selectAll('.tick text').attr('fill', '#4A5568').attr('font-size', '11px')); // theme-text-secondary
     
-    // Add bars
+    // Add bars with clinical color scheme and rounded corners
     const bars = g
       .selectAll('.bar')
       .data(data)
@@ -298,11 +304,13 @@ export const BarChart = ({
       .attr('y', d => yScale(yAccessor(d)))
       .attr('width', xScale.bandwidth())
       .attr('height', d => innerHeight - yScale(yAccessor(d)))
+      .attr('rx', 3) // Rounded corners for bars
+      .attr('ry', 3) // Rounded corners for bars
       .attr('fill', d => {
-        // Color based on value
-        if (yAccessor(d) >= 0.7) return '#dc2626';
-        if (yAccessor(d) >= 0.4) return '#f59e0b';
-        return '#16a34a';
+        // Color based on value - using clinical color scheme
+        if (yAccessor(d) >= 0.7) return '#EF4444'; // theme-danger (high risk)
+        if (yAccessor(d) >= 0.4) return '#F59E0B'; // theme-warning (medium risk)
+        return '#10B981'; // theme-success (low risk)
       })
       .style('cursor', onBarClick ? 'pointer' : 'default');
     
@@ -319,11 +327,12 @@ export const BarChart = ({
       .append('text')
       .attr('class', 'bar-value')
       .attr('x', d => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-      .attr('y', d => yScale(yAccessor(d)) - 5)
+      .attr('y', d => yScale(yAccessor(d)) - 8) // Adjusted position for better spacing
       .attr('text-anchor', 'middle')
       .attr('font-size', '10px')
-      .attr('fill', '#64748b')
-      .text(d => `${(yAccessor(d) * 100).toFixed(1)}%`);
+      .attr('font-weight', '500') // Slightly bolder
+      .attr('fill', '#374151') // theme-text-primary (darker for better contrast on light bg)
+      .text(d => `${(yAccessor(d) * 100).toFixed(0)}%`); // No decimal for cleaner look
     
     // Add axis labels
     if (xLabel) {
@@ -331,9 +340,9 @@ export const BarChart = ({
         .append('text')
         .attr('text-anchor', 'middle')
         .attr('x', margin.left + innerWidth / 2)
-        .attr('y', height - 5)
-        .attr('font-size', '10px')
-        .attr('fill', '#64748b')
+        .attr('y', currentHeight - margin.bottom / 2 + 10) // Adjusted y position
+        .attr('font-size', '12px') // Larger font
+        .attr('fill', '#374151') // theme-text-primary
         .text(xLabel);
     }
     
@@ -343,16 +352,17 @@ export const BarChart = ({
         .attr('text-anchor', 'middle')
         .attr('transform', 'rotate(-90)')
         .attr('x', -margin.top - innerHeight / 2)
-        .attr('y', 15)
-        .attr('font-size', '10px')
-        .attr('fill', '#64748b')
+        .attr('y', margin.left / 2 - 10) // Adjusted y position
+        .attr('font-size', '12px') // Larger font
+        .attr('fill', '#374151') // theme-text-primary
         .text(yLabel);
     }
     
-  }, [data, width, height, margin, xAccessor, yAccessor, xLabel, yLabel, color, maxValue, onBarClick]);
+  }, [data, margin, xAccessor, yAccessor, xLabel, yLabel, maxValue, onBarClick]); // Removed width, height, color from dependencies
   
   return (
-    <div className={`bar-chart ${className}`}>
+    // Added a container div to manage responsive sizing
+    <div ref={containerRef} className={`bar-chart-container ${className}`} style={{ width: '100%', height: '100%' }}>
       <svg ref={svgRef} />
     </div>
   );
@@ -434,7 +444,7 @@ export const FeatureContributionChart = ({
         .attr('text-anchor', 'end')
       );
     
-    // Add bars
+    // Add bars - Use theme colors for positive/negative contributions
     g.selectAll('.bar')
       .data(sortedData)
       .enter()
@@ -444,7 +454,7 @@ export const FeatureContributionChart = ({
       .attr('y', d => yScale(d.feature))
       .attr('width', d => Math.abs(xScale(d.contribution) - xScale(0)))
       .attr('height', yScale.bandwidth())
-      .attr('fill', d => d.contribution < 0 ? '#dc2626' : '#16a34a');
+      .attr('fill', d => d.contribution < 0 ? '#EF4444' : '#10B981'); // Use theme-danger and theme-success
     
     // Add contribution values
     g.selectAll('.contribution-value')
@@ -533,10 +543,12 @@ export const Heatmap = ({
       .range([0, innerHeight])
       .padding(0.1);
     
+    // Use theme colors for risk visualization - reversed for correct clinical interpretation
+    // (green = low risk, red = high risk)
     const color = d3
       .scaleSequential()
-      .domain([1, 0]) // Reversed for correct color mapping
-      .interpolator(colorScale);
+      .domain([1, 0]) // Reversed for correct color mapping (1 = high risk, 0 = low risk)
+      .interpolator(colorScale || d3.interpolateRdYlGn); // Red-Yellow-Green scale (reversed)
     
     // Add cells
     const cells = g

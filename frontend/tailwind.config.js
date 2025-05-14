@@ -6,6 +6,22 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        'theme-background': '#F8F9FA', // Light gray background
+        'theme-panel': '#FFFFFF',      // White for cards/panels
+        'theme-border': '#E2E8F0',      // Light gray border (Tailwind gray-300)
+        
+        'theme-primary-accent': '#3B82F6', // A calm blue (Tailwind blue-500)
+        'theme-primary-hover': '#2563EB', // Darker blue for hover (Tailwind blue-600)
+
+        'theme-text-primary': '#1A202C',   // Dark gray for main text (Tailwind gray-800)
+        'theme-text-secondary': '#4A5568', // Medium gray for secondary text (Tailwind gray-700)
+        'theme-text-link': '#3B82F6',       // Link color
+
+        'theme-success': '#10B981',      // Tailwind emerald-500
+        'theme-warning': '#F59E0B',      // Tailwind amber-500
+        'theme-danger': '#EF4444',       // Tailwind red-500
+
+        // Keeping your original primary/secondary for now, but new theme-* colors will take precedence
         primary: {
           50: '#eef9ff',
           100: '#dcf2ff',
@@ -18,112 +34,97 @@ module.exports = {
           800: '#055781',
           900: '#0a4a6d',
         },
-        secondary: {
+        secondary: { // Define all shades to avoid Tailwind errors if a shade is called that doesn't exist
           50: '#f6f9fd',
           100: '#edf4fa',
-          200: '#dae7f3',
-          300: '#bfd5e8',
-          400: '#93b5d3',
-          500: '#6790ba',
-          600: '#4a729e',
-          700: '#3c5d83',
-          800: '#33476a',
-          900: '#2c3b57',
+          200: '#dce9f6',
+          300: '#c2d9ef',
+          400: '#a2c3e7',
+          500: '#7daedc',
+          600: '#6092c7',
+          700: '#4f7ab5',
+          800: '#436595',
+          900: '#3a5579'
         },
-        accent: {
+        accent: { // Define all shades
           50: '#f3f1ff',
-          100: '#ebe5ff',
-          200: '#d9ceff',
-          300: '#bda7ff',
-          400: '#9f7aff',
-          500: '#8347ff',
-          600: '#7123fc',
-          700: '#6010eb',
-          800: '#5110c0',
-          900: '#420e9a',
+          100: '#e9e6ff',
+          200: '#d8d2ff',
+          300: '#bfb6ff',
+          400: '#a493ff',
+          500: '#8a70ff',
+          600: '#7b5bff',
+          700: '#6a48ff',
+          800: '#5838ff',
+          900: '#4f2fff'
         },
-        danger: {
+        danger: { // Define all shades
           50: '#fff1f2',
-          100: '#ffe2e4',
-          200: '#ffcacf',
-          300: '#fea3ab',
-          400: '#fd6b7a',
-          500: '#f53a54',
-          600: '#e11d3f',
-          700: '#bf1238',          800: '#9f1239',
-          900: '#7f1d1d',
+          100: '#ffe0e3',
+          200: '#ffcdd2',
+          300: '#ffb0b9',
+          400: '#ff8997',
+          500: '#f53a54', // This was your original
+          600: '#ef4444', // theme-danger
+          700: '#d1203a',
+          800: '#b31c31',
+          900: '#9b1c2d'
+        },
+        // Add success, warning if not fully defined from original theme
+        success: {
+            50: '#f0fdf4',
+            100: '#dcfce7',
+            200: '#bbf7d0',
+            300: '#86efac',
+            400: '#4ade80',
+            500: '#22c55e', // theme-success is 10B981 (emerald-500)
+            600: '#16a34a',
+            700: '#15803d',
+            800: '#166534',
+            900: '#14532d'
         },
         warning: {
-          50: '#fffceb',
-          100: '#fff7cd',
-          200: '#ffec9a',
-          300: '#ffde65',
-          400: '#ffca28',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
-        },
-        success: {
-          50: '#edfcf6',
-          100: '#d3f8e6',
-          200: '#aaf0d0',
-          300: '#72e5b7',
-          400: '#3fd399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
-        },      },
+            50: '#fffbeb',
+            100: '#fef3c7',
+            200: '#fde68a',
+            300: '#fcd34d',
+            400: '#fbbf24',
+            500: '#f59e0b', // theme-warning
+            600: '#d97706',
+            700: '#b45309',
+            800: '#92400e',
+            900: '#78350f'
+        }
+      },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['Lexend', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'],
       },
       boxShadow: {
-        'smooth': '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)',
-        'card': '0 4px 12px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1)',
-        'card-hover': '0 10px 25px rgba(0,0,0,0.07), 0 1px 5px rgba(0,0,0,0.1)',
-        'button': '0 1px 2px rgba(0,0,0,0.05), 0 1px 1px rgba(0,0,0,0.1)',
+        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.04)', // Softer shadow
+        'panel': '0 2px 4px 0 rgba(0,0,0,0.05)',
       },
       animation: {
+        'fade-in': 'fadeIn 0.5s ease-out forwards',
+        'slide-down': 'slideDown 0.5s ease-out forwards',
         'float': 'float 3s ease-in-out infinite',
-        'pulse-subtle': 'pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'fade-in': 'fade-in 0.5s ease-out',
-        'slide-up': 'slide-up 0.4s ease-out',
-        'slide-down': 'slide-down 0.4s ease-out',
-        'slide-in-right': 'slide-in-right 0.4s ease-out',
       },
       keyframes: {
-        'float': {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideDown: {
+          '0%': { opacity: '0', transform: 'translateY(-20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        float: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-5px)' },
-        },
-        'pulse-subtle': {
-          '0%, 100%': { opacity: 1 },
-          '50%': { opacity: 0.85 },
-        },
-        'fade-in': {
-          '0%': { opacity: 0 },
-          '100%': { opacity: 1 },
-        },
-        'slide-up': {
-          '0%': { transform: 'translateY(10px)', opacity: 0 },
-          '100%': { transform: 'translateY(0)', opacity: 1 },
-        },
-        'slide-down': {
-          '0%': { transform: 'translateY(-10px)', opacity: 0 },
-          '100%': { transform: 'translateY(0)', opacity: 1 },
-        },
-        'slide-in-right': {
-          '0%': { transform: 'translateX(20px)', opacity: 0 },
-          '100%': { transform: 'translateX(0)', opacity: 1 },
-        },
-      },
+        }
+      }
     },
   },
   plugins: [
     require('@tailwindcss/forms'),
   ],
-}
+};
